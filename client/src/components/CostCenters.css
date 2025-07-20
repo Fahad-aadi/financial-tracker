@@ -1,0 +1,257 @@
+.cost-centers-container {
+  padding: 1rem;
+}
+
+.cost-centers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.cost-centers-header h1 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.add-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-button:hover {
+  background-color: #27ae60;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 250px;
+  font-size: 0.9rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.cost-centers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.cost-center-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.cost-center-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cost-center-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.cost-center-title h3 {
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.cost-center-code {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.status-badge.active {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.status-badge.inactive {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.cost-center-details {
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  margin: 0 0 0.75rem 0;
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.manager {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.manager .label {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.manager .value {
+  color: #34495e;
+}
+
+.budget-info {
+  margin-bottom: 1.5rem;
+}
+
+.budget-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.budget-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-item .label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-bottom: 0.25rem;
+}
+
+.budget-item .value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.budget-item .value.danger {
+  color: #e74c3c;
+}
+
+.progress-container {
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.progress-fill.good {
+  background-color: #2ecc71;
+}
+
+.progress-fill.warning {
+  background-color: #f39c12;
+}
+
+.progress-fill.danger {
+  background-color: #e74c3c;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.cost-center-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+.action-button.edit {
+  background-color: #3498db;
+  color: white;
+}
+
+.action-button.view {
+  background-color: #7f8c8d;
+  color: white;
+}
+
+.action-button.reports {
+  background-color: #9b59b6;
+  color: white;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+  .cost-centers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+}

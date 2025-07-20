@@ -1,0 +1,171 @@
+=== Starting Financial Tracker Server (Debug Mode) ===
+Current directory: F:\GitHub\Under Development Software\FinancialTracker-New\server
+[dotenv@17.2.0] injecting env (6) from .env (tip: ⚙️  suppress all logs with { quiet: true })
+Environment variables loaded
+Core modules imported successfully
+Importing database module...
+Database module imported successfully
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "x-powered-by" to true
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "etag" to 'weak'
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "etag fn" to [Function: generateETag]
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "env" to 'development'
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "query parser" to 'extended'
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "query parser fn" to [Function: parseExtendedQueryString]
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "subdomain offset" to 2
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "trust proxy" to false
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "trust proxy fn" to [Function: trustNone]
+Sat, 12 Jul 2025 17:27:51 GMT express:application booting in development mode
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "view" to [Function: View]
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "views" to 'F:\\GitHub\\Under Development Software\\FinancialTracker-New\\server\\views'
+Sat, 12 Jul 2025 17:27:51 GMT express:application set "jsonp callback name" to 'callback'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' query
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' expressInit
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' corsMiddleware
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' helmetMiddleware
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' logger
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/' jsonParser
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Middleware configured
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/api/health'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/api/health'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/api/health'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Setting up API routes...
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route post '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route delete '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/api/schemeCodes' router
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/api/schemeCodes'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route post '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route put '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route delete '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/api/objectCodes' router
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/api/objectCodes'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route post '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route put '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route delete '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/api/vendors' router
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/api/vendors'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route get '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route post '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route put '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:route delete '/:id'
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/'
+Sat, 12 Jul 2025 17:27:51 GMT express:router use '/api/costCenters' router
+Sat, 12 Jul 2025 17:27:51 GMT express:router:layer new '/api/costCenters'
+Routes configured
+
+Starting server on port 4001...
+
+=== Server Started Successfully ===
+Server URL: http://0.0.0.0:4001
+API Base URL: http://0.0.0.0:4001/api
+Environment: development
+Process ID: 30984
+
+Press Ctrl+C to stop the server
+
+Testing server with a simple request...
+Connected to the SQLite database.
+Database schema initialized successfully
+Sat, 12 Jul 2025 17:27:51 GMT express:router dispatching GET /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router query  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router expressInit  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router corsMiddleware  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router helmetMiddleware  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router logger  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT express:router jsonParser  : /api/health
+Sat, 12 Jul 2025 17:27:51 GMT body-parser:json skip empty body
+Sat, 12 Jul 2025 17:27:51 GMT morgan log request
+[0mGET /api/health [32m200[0m 1.721 ms - 54[0m
+Server test response: {
+  statusCode: 200,
+  headers: {
+    'access-control-allow-origin': '*',
+    'content-security-policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+    'cross-origin-opener-policy': 'same-origin',
+    'cross-origin-resource-policy': 'same-origin',
+    'origin-agent-cluster': '?1',
+    'referrer-policy': 'no-referrer',
+    'strict-transport-security': 'max-age=15552000; includeSubDomains',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '54',
+    etag: 'W/"36-zZLX6SltuyFLv4BXbS3nZkoFl20"',
+    date: 'Sat, 12 Jul 2025 17:27:51 GMT',
+    connection: 'keep-alive',
+    'keep-alive': 'timeout=5'
+  },
+  data: '{"status":"ok","timestamp":"2025-07-12T17:27:51.329Z"}'
+}
+
+Shutting down server...
+Server has been stopped

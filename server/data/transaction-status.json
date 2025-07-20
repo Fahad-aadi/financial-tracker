@@ -1,0 +1,12 @@
+{
+  "16": {
+    "status": "cheque-prepared",
+    "paymentDetails": {
+      "chequeNumber": "313132",
+      "chequeDate": "25-06-2025",
+      "chequeAmount": "10000",
+      "remarks": ""
+    },
+    "updatedAt": "2025-06-25T14:47:07.496Z"
+  }
+}

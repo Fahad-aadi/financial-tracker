@@ -1,0 +1,463 @@
+/* PrintableForms.css */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .page-break-after {
+    page-break-after: always;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .form {
+    margin: 0;
+    padding: 0;
+    page-break-inside: avoid;
+  }
+}
+
+.printable-forms-container {
+  font-family: 'Arial', sans-serif;
+  max-width: 210mm; /* A4 width */
+  margin: 0 auto;
+  background-color: white;
+}
+
+.print-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.print-button, .close-button, .save-return-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.print-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.print-button:hover {
+  background-color: #45a049;
+}
+
+.close-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
+}
+
+.save-return-button {
+  background-color: #2196F3;
+  color: white;
+}
+
+.save-return-button:hover {
+  background-color: #0b7dda;
+}
+
+.forms-wrapper {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form {
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
+  padding: 10mm;
+  box-sizing: border-box;
+  position: relative;
+  background-color: white;
+}
+
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.form-table td {
+  border: 1px solid black;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.highlight {
+  /* background-color: #ffff00; */
+  font-weight: bold;
+}
+
+/* Contingent Bill Form Styles */
+.contingent-bill .left-header,
+.contingent-bill .right-header {
+  font-weight: bold;
+  padding: 8px;
+}
+
+.contingent-bill .form-title {
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.contingent-bill .office-details {
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.contingent-bill .label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.contingent-bill .dept-code {
+  margin-left: 20px;
+}
+
+.contingent-bill .no-col {
+  width: 50px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.contingent-bill .inner-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contingent-bill .inner-table td {
+  border: 1px solid black;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.contingent-bill .chart-col {
+  width: 100px;
+  text-align: center;
+}
+
+.contingent-bill .amount-col {
+  width: 100px;
+  text-align: center;
+}
+
+.contingent-bill .ps-col {
+  width: 50px;
+  text-align: center;
+}
+
+.contingent-bill .charge-heading {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.contingent-bill .charge-item {
+  margin-left: 20px;
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.contingent-bill .charge-total {
+  margin-left: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/*.contingent-bill .highlight-row {
+  /* background-color: #ffff00;
+} */
+
+
+.contingent-bill .obj-code {
+  width: 100px;
+  text-align: center;
+}
+
+.contingent-bill .amount {
+  width: 100px;
+  text-align: right;
+}
+
+.contingent-bill .grand-total {
+  text-align: right;
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Certification Form Styles */
+.certification td {
+  padding: 8px;
+}
+
+.certification .right-header {
+  text-align: center;
+  font-weight: bold;
+  width: 100px;
+}
+
+.certification .highlight {
+  /* background-color: #ffff00; */
+  text-align: right;
+  font-weight: bold;
+}
+
+.certification .grand-total-label {
+  text-align: right;
+  font-weight: bold;
+}
+
+.certification .amount-in-words {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.certification .certification-text {
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.certification .signature-line {
+  height: 50px;
+  position: relative;
+}
+
+.certification .signature-block {
+  position: absolute;
+  right: 50px;
+  bottom: 0;
+  text-align: center;
+}
+
+.certification .signature-title {
+  border-top: 1px solid black;
+  padding-top: 5px;
+  font-weight: bold;
+}
+
+.certification .certification-points {
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.certification .certification-points p {
+  margin: 10px 0;
+}
+
+.certification .signature-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.certification .date-block {
+  display: flex;
+  align-items: center;
+}
+
+.certification .date-line {
+  border-bottom: 1px solid black;
+  width: 150px;
+  margin-left: 10px;
+}
+
+.certification .audit-section {
+  padding: 10px;
+}
+
+.certification .audit-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-decoration: underline;
+}
+
+.certification .audit-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.certification .audit-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.certification .line {
+  border-bottom: 1px solid black;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.certification .audit-signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.certification .audit-signature-block {
+  text-align: center;
+  width: 200px;
+}
+
+/* Computer Information Sheet Styles */
+.computer-info .form-title {
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.computer-info .subtitle {
+  text-align: center;
+  font-size: 11px;
+  padding: 5px;
+}
+
+.computer-info .govt-cell {
+  text-align: center;
+  width: 80px;
+}
+
+.computer-info .section-title {
+  font-weight: bold;
+  text-align: center;
+  background-color: #f0f0f0;
+}
+
+.computer-info .claim-type-row td {
+  text-align: center;
+  width: 80px;
+}
+
+.computer-info .dept-name {
+  padding: 10px;
+}
+
+.computer-info .dept-value {
+  font-weight: bold;
+}
+
+.computer-info .payment-codes-section,
+.computer-info .deductions-section {
+  padding: 0;
+}
+
+.computer-info .payment-codes-table,
+.computer-info .deductions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.computer-info .payment-codes-table td,
+.computer-info .deductions-table td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.computer-info .signature-section {
+  padding: 10px;
+}
+
+.computer-info .signature-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.computer-info .signature-col {
+  width: 200px;
+}
+
+.computer-info .signature-line {
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+}
+
+.computer-info .net-claim-col {
+  text-align: right;
+}
+
+.computer-info .net-claim-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.computer-info .net-claim-value {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.computer-info .name-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.computer-info .name-col {
+  width: 200px;
+}
+
+.computer-info .name-line {
+  border-bottom: 1px solid black;
+  margin-top: 5px;
+}
+
+.computer-info .rupees-col {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.computer-info .rupees-value {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+.computer-info .document-section {
+  padding: 10px;
+}
+
+.computer-info .document-row {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.computer-info .document-col,
+.computer-info .cheque-col {
+  flex: 1;
+}
+
+.computer-info .document-line,
+.computer-info .cheque-line {
+  border-bottom: 1px solid black;
+  margin-top: 5px;
+}
+
+.computer-info .date-row {
+  width: 200px;
+}
+
+.computer-info .date-line {
+  border-bottom: 1px solid black;
+  margin-top: 5px;
+}

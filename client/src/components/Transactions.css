@@ -1,0 +1,309 @@
+.transactions-container {
+  padding: 1rem;
+}
+
+.transactions-header {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.transactions-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.transactions-header h1 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.transactions-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.add-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-button:hover {
+  background-color: #27ae60;
+}
+
+.add-transaction-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-transaction-button:hover {
+  background-color: #45a049;
+}
+
+.search-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3);
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-controls select {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.transactions-table th, 
+.transactions-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.transactions-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.transactions-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #555;
+}
+
+.transactions-table th:nth-child(1), 
+.transactions-table td:nth-child(1) {
+  width: 75px;
+}
+
+.transactions-table th:nth-child(2), 
+.transactions-table td:nth-child(2) {
+  width: 140px;
+}
+
+.transactions-table th:nth-child(5), 
+.transactions-table td:nth-child(5),
+.transactions-table th:nth-child(6), 
+.transactions-table td:nth-child(6) {
+  width: 90px;
+  text-align: right;
+}
+
+.transactions-table th:nth-child(7), 
+.transactions-table td:nth-child(7),
+.transactions-table th:nth-child(8), 
+.transactions-table td:nth-child(8) {
+  width: 90px;
+  text-align: center;
+}
+
+.type-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  display: inline-block;
+}
+
+.type-badge.expense {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.type-badge.income {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.amount.expense {
+  color: #e74c3c;
+}
+
+.amount.income {
+  color: #2ecc71;
+}
+
+.net-amount {
+  color: #2e7d32;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.status-badge.completed {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.status-badge.pending {
+  background-color: #f39c12;
+  color: white;
+}
+
+.status-badge.cancelled {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.status-button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.status-button.pending {
+  background-color: #FFC107;
+  color: #000;
+}
+
+.status-button.pending:hover {
+  background-color: #FFB300;
+}
+
+.status-button.cheque-issued {
+  background-color: #2196F3;
+  color: white;
+}
+
+.status-button.cheque-issued:hover {
+  background-color: #1E88E5;
+}
+
+.status-button.cheque-prepared {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status-button.cheque-prepared:hover {
+  background-color: #43A047;
+}
+
+.status-button.paid {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status-button.paid:hover {
+  background-color: #43A047;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 4px 6px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+  min-width: 40px;
+}
+
+.action-button.view {
+  background-color: #607d8b;
+  color: white;
+}
+
+.action-button.view:hover {
+  background-color: #455a64;
+}
+
+.action-button.edit {
+  background-color: #2196F3;
+  color: white;
+}
+
+.action-button.edit:hover {
+  background-color: #1976D2;
+}
+
+.action-button.delete {
+  background-color: #f44336;
+  color: white;
+}
+
+.action-button.delete:hover {
+  background-color: #d32f2f;
+}
+
+.action-button.print {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.action-button.print:hover {
+  background-color: #388E3C;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}

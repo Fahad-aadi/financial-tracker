@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "code": "A01101",
+    "description": "Basic Pay of Officers"
+  },
+  {
+    "id": 2,
+    "code": "A01151",
+    "description": "Basic pay of Other staff"
+  },
+  {
+    "id": 3,
+    "code": "A01202",
+    "description": "House Rent Allowance"
+  },
+  {
+    "id": 4,
+    "code": "A01203",
+    "description": "Conveyance Allowance"
+  },
+  {
+    "id": 5,
+    "code": "A01250",
+    "description": "Incentive All"
+  }
+]

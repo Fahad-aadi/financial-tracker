@@ -1,0 +1,8 @@
+1st enter code "npm start" in "Client" Folder
+
+ F:\GitHub\Under Development Software\FinancialTracker-New\client> npm start
+
+
+then start the .bat file name:
+
+"start-server.bat"

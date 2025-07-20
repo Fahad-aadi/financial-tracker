@@ -1,0 +1,64 @@
+[dotenv@17.2.0] injecting env (8) from .env (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+Database configuration:
+- Database path: F:\GitHub\Under Development Software\FinancialTracker-New\server\data\financial_tracker.db
+- Environment: development
+
+=== Starting Financial Tracker Server ===
+Environment: development
+Server time: 2025-07-12T08:42:30.494Z
+Node.js version: v22.14.0
+Platform: win32 x64
+Server will run on port: 4000
+
+Database Configuration:
+- Database path: F:\GitHub\Under Development Software\FinancialTracker-New\server\data\financial_tracker.db
+- Database exists: ✅ Yes
+Client build directory not found at: F:\GitHub\Under Development Software\FinancialTracker-New\client\build
+Static file serving is disabled
+
+=== Server Started Successfully ===
+Server URL: http://0.0.0.0:4000
+API Base URL: http://0.0.0.0:4000/api
+Environment: development
+Process ID: 22832
+
+Press Ctrl+C to stop the server
+
+
+Running initial database test...
+✅ Connected to SQLite database at: F:\GitHub\Under Development Software\FinancialTracker-New\server\data\financial_tracker.db
+✅ Initial database test passed
+✅ Foreign key constraints enabled
+Starting database initialization...
+Enabling foreign key constraints...
+Starting table creation...
+Creating table 'scheme_codes' if it doesn't exist...
+Creating table 'vendors' if it doesn't exist...
+Creating table 'budgets' if it doesn't exist...
+Creating table 'budget_allocations' if it doesn't exist...
+Creating table 'budget_releases' if it doesn't exist...
+Creating table 'transactions' if it doesn't exist...
+Creating table 'categories' if it doesn't exist...
+Creating table 'cost_centers' if it doesn't exist...
+Creating table 'object_codes' if it doesn't exist...
+Creating table 'vendors' if it doesn't exist...
+Creating table 'bill_numbers' if it doesn't exist...
+Creating table 'users' if it doesn't exist...
+Database schema initialized successfully
+✅ Foreign key constraints enabled
+✅ Table 'scheme_codes' is ready
+✅ Table 'vendors' is ready
+✅ Table 'budgets' is ready
+✅ Table 'budget_allocations' is ready
+✅ Table 'budget_releases' is ready
+✅ Table 'transactions' is ready
+✅ Table 'categories' is ready
+✅ Table 'cost_centers' is ready
+✅ Table 'object_codes' is ready
+✅ Table 'vendors' is ready
+✅ Table 'bill_numbers' is ready
+✅ Table 'users' is ready
+
+Shutting down server...
+Shutting down server...
+Server stopped
