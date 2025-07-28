@@ -47,6 +47,8 @@ try {
   app.use('/api/vendors', require('./routes/vendors'));
   app.use('/api/costCenters', require('./routes/costCenters'));
   app.use('/api/budget-allocations', require('./routes/budgets'));
+  app.use('/api/budget-releases', require('./routes/budgetRelease'));
+  app.use('/api/budget-adjustments', require('./routes/budgetAdjustment'));
 
   console.log('Routes configured');
   

@@ -19,7 +19,6 @@ interface BudgetAllocation {
   objectCode: string;
   codeDescription: string;
   costCenter: string;
-  costCenterName: string;
   financialYear: string;
   totalAllocation: number;
   q1Release: number;
@@ -35,6 +34,9 @@ interface BudgetAllocation {
   reAppropriationsIn: number;
   reAppropriationsOut: number;
   surrenders: number;
+  objectCodeName?:string;
+  costCenterName:string;
+
 }
 
 interface BudgetRelease {
@@ -61,8 +63,10 @@ interface BudgetAdjustment {
   toCostCenter?: string;
   amount: number;
   type: 'supplementary' | 'reappropriation' | 'surrender';
+  period ?:string;
   remarks: string;
   financialYear: string;
+  dateCreated ?:string;
 }
 
 const IntegratedBudgets: React.FC = () => {
@@ -509,8 +513,8 @@ const IntegratedBudgets: React.FC = () => {
     } else {
       // Check if allocation already exists for this combination
       const existingAllocation = allocations.find(
-        a => a.objectCode === formData.objectCode && 
-             a.costCenter === formData.costCenter && 
+        a => a.objectCodeName === formData.objectCode && 
+             a.costCenterName === formData.costCenter && 
              a.financialYear === formData.financialYear
       );
       
@@ -1029,7 +1033,7 @@ const IntegratedBudgets: React.FC = () => {
     }
   };
   
-  const handleAdjustment = (e: React.FormEvent) => {
+  const handleAdjustment = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const type = adjustmentForm.type as 'supplementary' | 'reappropriation' | 'surrender';
@@ -1040,16 +1044,15 @@ const IntegratedBudgets: React.FC = () => {
     const amount = parseFloat(adjustmentForm.amount);
     const remarks = adjustmentForm.remarks;
     const financialYear = adjustmentForm.financialYear;
-    
     if (isNaN(amount) || amount <= 0) {
       alert('Amount must be a positive number');
       return;
     }
     
     // Find the allocation for validation
-    const fromAllocation = allocations.find(a => 
-      a.objectCode === fromObjectCode && 
-      a.costCenter === fromCostCenter && 
+    const fromAllocation = allocations.find(a =>
+      a.objectCodeName === fromObjectCode && 
+      a.costCenterName === fromCostCenter && 
       a.financialYear === financialYear
     );
     
@@ -1072,11 +1075,11 @@ const IntegratedBudgets: React.FC = () => {
     // For reappropriation, also check the destination allocation
     if (type === 'reappropriation') {
       const toAllocation = allocations.find(a => 
-        a.objectCode === toObjectCode && 
-        a.costCenter === toCostCenter && 
+        a.objectCodeName === toObjectCode && 
+        a.costCenterName === toCostCenter && 
         a.financialYear === financialYear
       );
-      
+
       if (!toAllocation) {
         alert('Could not find the destination allocation for this reappropriation');
         return;
@@ -1111,8 +1114,8 @@ const IntegratedBudgets: React.FC = () => {
     if (type === 'supplementary') {
       // Find the allocation for the object code receiving the supplementary grant
       const allocation = allocations.find(a => 
-        a.objectCode === fromObjectCode && 
-        a.costCenter === fromCostCenter && 
+        a.objectCodeName === fromObjectCode && 
+        a.costCenterName === fromCostCenter && 
         a.financialYear === financialYear
       );
       
@@ -1151,10 +1154,12 @@ const IntegratedBudgets: React.FC = () => {
       // Add the new budget entry
       const newEntry = {
         id: Date.now(),
-        objectCode: fromObjectCode,
-        codeDescription: allocation.codeDescription,
-        costCenter: fromCostCenter,
-        costCenterName: allocation.costCenterName,
+        fromObjectCodeId: fromAllocation.objectCode,
+        fromCostCenterId: allocation.costCenter,
+        fromObjectCode: fromObjectCode,
+        fromCodeDescription: allocation.codeDescription,
+        fromCostCenter: fromCostCenter,
+        fromCostCenterName: allocation.costCenterName,
         amountAllocated: allocation.totalAllocation,
         budgetReleased: amount,
         financialYear,
@@ -1164,20 +1169,37 @@ const IntegratedBudgets: React.FC = () => {
       };
       
       budgetEntries.push(newEntry);
+      try{
+      const createResponse = await fetch('http://localhost:4001/api/budget-adjustments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newEntry)
+          });
+          
+          if (createResponse.ok) {
+            console.log(`Created budget entry for allocation ID: ${allocation.id}`);
+          } else {
+            console.warn(`Failed to create budget entry for allocation ID: ${allocation.id}`);
+          }
+        } catch (error) {
+          console.error(`Error creating budget entry for allocation ID: ${allocation.id}:`, error);
+        }
       localStorage.setItem('budgetEntries', JSON.stringify(budgetEntries));
       
     } else if (type === 'reappropriation') {
       // Find the allocation for the source object code
       const fromAllocation = allocations.find(a => 
-        a.objectCode === fromObjectCode && 
-        a.costCenter === fromCostCenter && 
+        a.objectCodeName === fromObjectCode && 
+        a.costCenterName === fromCostCenter && 
         a.financialYear === financialYear
       );
       
       // Find the allocation for the destination object code
       const toAllocation = allocations.find(a => 
-        a.objectCode === toObjectCode && 
-        a.costCenter === toCostCenter && 
+        a.objectCodeName === toObjectCode && 
+        a.costCenterName === toCostCenter && 
         a.financialYear === financialYear
       );
       
@@ -1232,11 +1254,20 @@ const IntegratedBudgets: React.FC = () => {
       // Add the new budget entries
       const fromEntry = {
         id: Date.now(),
-        objectCode: fromObjectCode,
-        codeDescription: fromAllocation.codeDescription,
-        costCenter: fromCostCenter,
-        costCenterName: fromAllocation.costCenterName,
-        amountAllocated: fromAllocation.totalAllocation,
+        fromObjectCode: fromObjectCode,
+        fromCodeDescription: fromAllocation.codeDescription,
+        fromObjectCodeId: fromAllocation.objectCode,
+        fromCostCenterId: fromAllocation.costCenter,
+        fromCostCenter: fromCostCenter,
+        fromCostCenterName: fromAllocation.costCenterName,
+
+        toObjectCode: toObjectCode,
+        toCodeDescription: toAllocation.codeDescription,
+        toObjectCodeId: toAllocation.objectCode,
+        toCostCenterId: toAllocation.costCenter,
+        toCostCenter: toCostCenter,
+        toCostCenterName: toAllocation.costCenterName,
+        amountAllocated: toAllocation.totalAllocation,
         budgetReleased: -amount, // Negative amount
         financialYear,
         period: 'reappropriation',
@@ -1259,13 +1290,30 @@ const IntegratedBudgets: React.FC = () => {
       };
       
       budgetEntries.push(fromEntry, toEntry);
+      try{
+        const createResponse = await fetch('http://localhost:4001/api/budget-adjustments', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(fromEntry)
+            });
+            
+            if (createResponse.ok) {
+              console.log(`Created budget entry for allocation ID: ${fromAllocation.id}`);
+            } else {
+              console.warn(`Failed to create budget entry for allocation ID: ${fromAllocation.id}`);
+            }
+        } catch (error) {
+          console.error(`Error creating budget entry for allocation ID: ${fromAllocation.id}:`, error);
+        }      
       localStorage.setItem('budgetEntries', JSON.stringify(budgetEntries));
       
     } else if (type === 'surrender') {
       // Find the allocation for the object code surrendering budget
       const allocation = allocations.find(a => 
-        a.objectCode === fromObjectCode && 
-        a.costCenter === fromCostCenter && 
+        a.objectCodeName === fromObjectCode && 
+        a.costCenterName === fromCostCenter && 
         a.financialYear === financialYear
       );
       
@@ -1304,10 +1352,12 @@ const IntegratedBudgets: React.FC = () => {
       // Add the new budget entry
       const newEntry = {
         id: Date.now(),
-        objectCode: fromObjectCode,
-        codeDescription: allocation.codeDescription,
-        costCenter: fromCostCenter,
-        costCenterName: allocation.costCenterName,
+        fromObjectCode: fromObjectCode,
+        fromCodeDescription: allocation.codeDescription,
+        fromCostCenter: fromCostCenter,
+        fromCostCenterName: allocation.costCenterName,
+        fromObjectCodeId: allocation.objectCode,
+        fromCostCenterId: allocation.costCenter,
         amountAllocated: allocation.totalAllocation,
         budgetReleased: -amount, // Negative amount
         financialYear,
@@ -1315,11 +1365,27 @@ const IntegratedBudgets: React.FC = () => {
         remarks: `Budget surrender: ${remarks}`,
         dateCreated: currentDate
       };
-      
+      //=============
       budgetEntries.push(newEntry);
+      try{
+      const createResponse = await fetch('http://localhost:4001/api/budget-adjustments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newEntry)
+          });
+          
+          if (createResponse.ok) {
+            console.log(`Created budget entry for allocation ID: ${allocation.id}`);
+          } else {
+            console.warn(`Failed to create budget entry for allocation ID: ${allocation.id}`);
+          }
+        } catch (error) {
+          console.error(`Error creating budget entry for allocation ID: ${allocation.id}:`, error);
+        }
       localStorage.setItem('budgetEntries', JSON.stringify(budgetEntries));
     }
-    
     // Reset form
     setAdjustmentForm({
       type: 'supplementary',
@@ -1338,7 +1404,7 @@ const IntegratedBudgets: React.FC = () => {
   const handleEditAdjustment = (adjustment: BudgetAdjustment) => {
     setEditingAdjustment(adjustment);
     setAdjustmentForm({
-      type: adjustment.type,
+      type: adjustment.period?? adjustment.type,
       fromObjectCode: adjustment.fromObjectCode || '',
       fromCostCenter: adjustment.fromCostCenter || '',
       toObjectCode: adjustment.toObjectCode || '',
@@ -1663,7 +1729,7 @@ const IntegratedBudgets: React.FC = () => {
                   >
                     <option value="">Select Object Code</option>
                     {objectCodes.map(code => (
-                      <option key={code.id} value={code.code}>
+                      <option key={code.id} value={code.id}>
                         {code.code} - {code.description}
                       </option>
                     ))}
@@ -1680,7 +1746,7 @@ const IntegratedBudgets: React.FC = () => {
                   >
                     <option value="">Select Cost Center</option>
                     {costCenters.map(center => (
-                      <option key={center.id} value={center.code}>
+                      <option key={center.id} value={center.id}>
                         {center.code} - {center.name}
                       </option>
                     ))}
@@ -2004,9 +2070,9 @@ const IntegratedBudgets: React.FC = () => {
                     
                     return (
                       <tr key={allocation.id}>
-                        <td>{allocation.objectCode}</td>
+                        <td>{allocation.objectCodeName}</td>
                         <td>{allocation.codeDescription}</td>
-                        <td>{allocation.costCenter} - {allocation.costCenterName}</td>
+                        <td>{allocation.costCenterName} - {allocation.costCenterName}</td>
                         <td className="amount">Rs. {allocation.totalAllocation.toLocaleString()}</td>
                         <td className="amount">Rs. {totalReleased.toLocaleString()}</td>
                         <td className="amount">Rs. {availableBudget.toLocaleString()}</td>
@@ -2113,8 +2179,8 @@ const IntegratedBudgets: React.FC = () => {
                 <tbody>
                   {filteredAdjustments.map(adjustment => (
                     <tr key={adjustment.id}>
-                      <td>{formatDate(adjustment.date)}</td>
-                      <td>{adjustment.type}</td>
+                      <td>{formatDate(adjustment.dateCreated && adjustment.dateCreated || adjustment.date)}</td>
+                      <td>{adjustment.period}</td>
                       <td>{adjustment.fromObjectCode}</td>
                       <td>{adjustment.fromCostCenter}</td>
                       <td>{adjustment.toObjectCode}</td>

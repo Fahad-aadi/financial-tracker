@@ -101,33 +101,33 @@ const initDatabase = () => {
       -- Budgets table
       CREATE TABLE IF NOT EXISTS budgets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        financial_year TEXT NOT NULL,
-        cost_center_id INTEGER NOT NULL,
+        financialYear TEXT NOT NULL,
+        costCenter INTEGER NOT NULL,
         object_code_id INTEGER NOT NULL,
-        amount DECIMAL(15, 2) NOT NULL DEFAULT 0,
+        totalAllocation DECIMAL(15, 2) NOT NULL DEFAULT 0,
         notes TEXT,
         createdBy INTEGER,
         updatedBy INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
-        FOREIGN KEY (cost_center_id) REFERENCES cost_centers (id),
+        FOREIGN KEY (costCenter) REFERENCES cost_centers (id),
         FOREIGN KEY (object_code_id) REFERENCES object_codes (id),
         FOREIGN KEY (createdBy) REFERENCES users (id),
         FOREIGN KEY (updatedBy) REFERENCES users (id),
-        UNIQUE (financial_year, cost_center_id, object_code_id)
+        UNIQUE (financialYear, costCenter, object_code_id)
       );
       
       -- Transactions table
       CREATE TABLE IF NOT EXISTS transactions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         transaction_date TEXT NOT NULL,
-        financial_year TEXT NOT NULL,
-        cost_center_id INTEGER NOT NULL,
+        financialYear TEXT NOT NULL,
+        costCenter INTEGER NOT NULL,
         object_code_id INTEGER NOT NULL,
         vendor_id INTEGER,
         bill_number TEXT,
         description TEXT NOT NULL,
-        amount DECIMAL(15, 2) NOT NULL,
+        totalAllocation DECIMAL(15, 2) NOT NULL,
         payment_method TEXT,
         reference_number TEXT,
         isPaid BOOLEAN NOT NULL DEFAULT 0,
@@ -137,7 +137,7 @@ const initDatabase = () => {
         updatedBy INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
-        FOREIGN KEY (cost_center_id) REFERENCES cost_centers (id),
+        FOREIGN KEY (costCenter) REFERENCES cost_centers (id),
         FOREIGN KEY (object_code_id) REFERENCES object_codes (id),
         FOREIGN KEY (vendor_id) REFERENCES vendors (id),
         FOREIGN KEY (createdBy) REFERENCES users (id),
@@ -147,53 +147,99 @@ const initDatabase = () => {
       -- Budget Allocations table
       CREATE TABLE IF NOT EXISTS budget_allocations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        financial_year TEXT NOT NULL,
-        cost_center_id INTEGER NOT NULL,
-        scheme_code_id INTEGER NOT NULL,
-        allocation_date TEXT NOT NULL,
-        amount DECIMAL(15, 2) NOT NULL,
+        financialYear TEXT NOT NULL,
+        costCenter INTEGER NOT NULL,
+        objectCode INTEGER NOT NULL,
+        dateCreated TEXT NOT NULL,
+        totalAllocation DECIMAL(15, 2) NOT NULL,
         notes TEXT,
         createdBy INTEGER,
         updatedBy INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
-        FOREIGN KEY (cost_center_id) REFERENCES cost_centers (id),
-        FOREIGN KEY (scheme_code_id) REFERENCES scheme_codes (id),
+        q1Release INTEGER,
+        q2Release INTEGER,
+        q3Release INTEGER,
+        q4Release INTEGER,
+        q1Released BOOLEAN,
+        q2Released BOOLEAN,
+        q3Released BOOLEAN,
+        q4Released BOOLEAN,
+        FOREIGN KEY (costCenter) REFERENCES cost_centers (id),
+        FOREIGN KEY (objectCode) REFERENCES object_codes (id),
         FOREIGN KEY (createdBy) REFERENCES users (id),
         FOREIGN KEY (updatedBy) REFERENCES users (id),
-        UNIQUE (financial_year, cost_center_id, scheme_code_id)
+        UNIQUE (financialYear, costCenter, objectCode)
       );
       
       -- Budget Releases table
       CREATE TABLE IF NOT EXISTS budget_releases (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        allocation_id INTEGER NOT NULL,
-        release_date TEXT NOT NULL,
+        allocationId INTEGER NOT NULL,
+        costCenter INTEGER NOT NULL,
+        objectCode INTEGER NOT NULL,
+        dateReleased TEXT NOT NULL,
         amount DECIMAL(15, 2) NOT NULL,
-        description TEXT,
+        costCenterName TEXT,
+        remarks TEXT,
+        type TEXT,
         reference_number TEXT,
         is_approved BOOLEAN NOT NULL DEFAULT 0,
-        approved_by INTEGER,
-        approved_at TEXT,
+        approvedBy INTEGER,
+        approvedAt TEXT,
+        financialYear TEXT,
         notes TEXT,
+        quarter INTEGER,
         createdBy INTEGER,
         updatedBy INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
-        FOREIGN KEY (allocation_id) REFERENCES budget_allocations (id) ON DELETE CASCADE,
-        FOREIGN KEY (approved_by) REFERENCES users (id),
+        FOREIGN KEY (allocationId) REFERENCES budget_allocations (id) ON DELETE CASCADE,
+        FOREIGN KEY (costCenter) REFERENCES cost_centers (id) ON DELETE CASCADE,
+        FOREIGN KEY (objectCode) REFERENCES object_codes (id) ON DELETE CASCADE,
+        FOREIGN KEY (approvedBy) REFERENCES users (id),
         FOREIGN KEY (createdBy) REFERENCES users (id),
         FOREIGN KEY (updatedBy) REFERENCES users (id)
       );
+
+      CREATE TABLE IF NOT EXISTS budget_adjustments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fromCostCenterId INTEGER NOT NULL,
+        fromObjectCodeId INTEGER NOT NULL,
+        toObjectCodeId INTEGER,
+        toCostCenterId INTEGER,
+        amountAllocated DECIMAL(15, 2) NOT NULL,
+        budgetReleased DECIMAL(15, 2) NOT NULL,
+        fromObjectCode TEXT,
+        fromCostCenter TEXT,
+        fromCostCenterName TEXT,
+        toObjectCode TEXT,
+        toCostCenter TEXT,
+        toCostCenterName TEXT,
+        period TEXT,
+        remarks TEXT,
+        financialYear TEXT NOT NULL,
+        dateCreated TEXT NOT NULL,
+        createdBy INTEGER,
+        updatedBy INTEGER,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL,
+        FOREIGN KEY (fromCostCenterId) REFERENCES cost_centers (id) ON DELETE CASCADE,
+        FOREIGN KEY (fromObjectCodeId) REFERENCES object_codes (id) ON DELETE CASCADE,
+        FOREIGN KEY (toCostCenterId) REFERENCES cost_centers (id) ON DELETE CASCADE,
+        FOREIGN KEY (toObjectCodeId) REFERENCES object_codes (id) ON DELETE CASCADE,
+        FOREIGN KEY (createdBy) REFERENCES users (id),
+        FOREIGN KEY (updatedBy) REFERENCES users (id)
+        );
       
       -- Bill Numbers table (for tracking unique bill numbers)
       CREATE TABLE IF NOT EXISTS bill_numbers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         bill_number TEXT NOT NULL UNIQUE,
         transaction_id INTEGER,
-        cost_center_id INTEGER NOT NULL,
-        financial_year TEXT NOT NULL,
-        amount DECIMAL(15, 2) NOT NULL,
+        costCenter INTEGER NOT NULL,
+        financialYear TEXT NOT NULL,
+        totalAllocation DECIMAL(15, 2) NOT NULL,
         is_used BOOLEAN NOT NULL DEFAULT 0,
         used_date TEXT,
         notes TEXT,
@@ -202,20 +248,20 @@ const initDatabase = () => {
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
         FOREIGN KEY (transaction_id) REFERENCES transactions (id) ON DELETE SET NULL,
-        FOREIGN KEY (cost_center_id) REFERENCES cost_centers (id),
+        FOREIGN KEY (costCenter) REFERENCES cost_centers (id),
         FOREIGN KEY (createdBy) REFERENCES users (id),
         FOREIGN KEY (updatedBy) REFERENCES users (id)
       );
       
       -- Create indexes for better performance
       CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(transaction_date);
-      CREATE INDEX IF NOT EXISTS idx_transactions_financial_year ON transactions(financial_year);
-      CREATE INDEX IF NOT EXISTS idx_transactions_cost_center ON transactions(cost_center_id);
+      CREATE INDEX IF NOT EXISTS idx_transactions_financial_year ON transactions(financialYear);
+      CREATE INDEX IF NOT EXISTS idx_transactions_cost_center ON transactions(costCenter);
       CREATE INDEX IF NOT EXISTS idx_transactions_object_code ON transactions(object_code_id);
-      CREATE INDEX IF NOT EXISTS idx_budgets_financial_year ON budgets(financial_year);
-      CREATE INDEX IF NOT EXISTS idx_budgets_cost_center ON budgets(cost_center_id);
-      CREATE INDEX IF NOT EXISTS idx_budget_allocations_financial_year ON budget_allocations(financial_year);
-      CREATE INDEX IF NOT EXISTS idx_budget_allocations_cost_center ON budget_allocations(cost_center_id);
+      CREATE INDEX IF NOT EXISTS idx_budgets_financial_year ON budgets(financialYear);
+      CREATE INDEX IF NOT EXISTS idx_budgets_cost_center ON budgets(costCenter);
+      CREATE INDEX IF NOT EXISTS idx_budget_allocations_financial_year ON budget_allocations(financialYear);
+      CREATE INDEX IF NOT EXISTS idx_budget_allocations_cost_center ON budget_allocations(costCenter);
     `;
 
     // Execute the create tables query
@@ -755,10 +801,401 @@ module.exports = {
       throw error;
     }
   },
-  createBudgetAllocation: async (budget) => {
-    
+  createBudgetAllocation: async (allocation)=> {
+  try {
+    const {
+      id,
+      objectCode,
+      codeDescription,
+      costCenter,
+      costCenterName,
+      financialYear,
+      totalAllocation,
+      q1Release,
+      q2Release,
+      q3Release,
+      q4Release,
+      q1Released,
+      q2Released,
+      q3Released,
+      q4Released,
+      dateCreated,
+      supplementaryGrants,
+      reAppropriationsIn,
+      reAppropriationsOut,
+      surrenders
+  } = allocation;
+
+    if (!financialYear || !costCenter || !objectCode || !dateCreated || !totalAllocation) {
+      throw new Error('Missing required fields for budget allocation.');
+    }
+
+    const now = new Date().toISOString();
+
+    const params = [
+      financialYear,
+      Number(costCenter),
+      Number(objectCode),
+      dateCreated,
+      totalAllocation,
+      codeDescription || null,
+      null,
+      null,
+      now,
+      now,
+      q1Release,
+      q2Release,
+      q3Release,
+      q4Release,
+      q1Released,
+      q2Released,
+      q3Released,
+      q4Released,
+    ];
+
+    const result = await run(`
+      INSERT INTO budget_allocations
+      (financialYear, costCenter, objectCode, dateCreated, totalAllocation, notes, createdBy, updatedBy, createdAt, updatedAt, q1Release, q2Release, q3Release, q4Release, q1Released, q2Released, q3Released, q4Released)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, ?,?,?, ?,?,?)`,
+      params
+    );
+    console.log("-----------------------------------",result);
+
+    if (result?.lastID) {
+      return {
+        id: result.lastID,
+        financialYear,
+        costCenter,
+        objectCode,
+        dateCreated,
+        totalAllocation,
+        createdAt: now,
+        updatedAt: now,
+      };
+    }
+
+    throw new Error('Insert failed, no ID returned');
+  } catch (error) {
+    console.error('Error in createBudgetAllocation:', {
+      message: error.message,
+      stack: error.stack
+    }, error);
+    throw error;
   }
-  
+},
+getAllBudgetAllocations: async ()=> {
+  try {
+    const rows = await all('SELECT * FROM budget_allocations');
+    return rows;
+  } catch (error) {
+    console.error('Error fetching budget allocations:', error.message);
+    throw error;
+  }
+},
+getBudgetAllocationById: async (id) => {
+  try {
+    const row = await get('SELECT * FROM budget_allocations WHERE id = ?', [id]);
+    if (!row) throw new Error(`No budget allocation found with ID ${id}`);
+    return row;
+  } catch (error) {
+    console.error('Error in getBudgetAllocationById:', error.message);
+    throw error;
+  }
+},
+updateBudgetAllocation: async (id, updateData)=> {
+  try {
+    const {
+      id,
+      objectCode,
+      codeDescription,
+      costCenter,
+      costCenterName,
+      notes,
+      financialYear,
+      totalAllocation,
+      q1Release,
+      q2Release,
+      q3Release,
+      q4Release,
+      q1Released,
+      q2Released,
+      q3Released,
+      q4Released,
+      dateCreated,
+      supplementaryGrants,
+      reAppropriationsIn,
+      reAppropriationsOut,
+      surrenders,
+      createdBy,
+      updatedBy,
+      createdAt
+  } = updateData;
+
+    const now = new Date().toISOString();
+
+    const params = [
+      financialYear,
+      costCenter,
+      objectCode,
+      dateCreated,
+      totalAllocation,
+      notes || null,
+      createdBy || null,
+      updatedBy || null,
+      createdAt,
+      now,
+      q1Release,
+      q2Release,
+      q3Release,
+      q4Release,
+      q1Released,
+      q2Released,
+      q3Released,
+      q4Released,
+      id,
+    ];
+
+    const result = await run(`UPDATE budget_allocations SET financialYear = ?, costCenter = ?, objectCode = ?, dateCreated = ?, totalAllocation = ?, notes = ?, createdBy = ?, updatedBy = ?, createdAt = ?, updatedAt = ?, q1Release = ?, q2Release = ?, q3Release = ?, q4Release = ?, q1Released = ?, q2Released = ?, q3Released = ?, q4Released = ? WHERE id = ?`, params);
+
+    return { updated: result.changes };
+  } catch (error) {
+    console.error('Error in updateBudgetAllocation:', error.message);
+    throw error;
+  }
+},
+deleteBudgetAllocation: async (id)=> {
+  try {
+    const result = await run('DELETE FROM budget_allocations WHERE id = ?', [id]);
+    return { deleted: result.changes };
+  } catch (error) {
+    console.error('Error deleting budget allocation:', error.message);
+    throw error;
+  }
+},
+createBudgetRelease: async (releaseAllication) =>{
+
+    try {
+    const {
+      id, 
+      allocationId, 
+      objectCode, 
+      costCenter, 
+      costCenterName, 
+      financialYear, 
+      quarter, 
+      amount, 
+      dateReleased, 
+      remarks, 
+      type
+
+  } = releaseAllication;
+
+    if (!financialYear || !costCenter || !objectCode || !allocationId || !amount) {
+      throw new Error('Missing required fields for budget allocation.');
+    }
+
+    const now = new Date().toISOString();
+
+    const params = [
+      Number(allocationId),
+      Number(costCenter),
+      Number(objectCode),
+      now,
+      amount,
+      remarks,
+      costCenterName,
+      type,
+      '',
+      1,
+      null,
+      now,
+      financialYear,
+      '',
+      quarter,
+      null,
+      null,
+      now,
+      now
+    ];
+    console.log("...........",params)
+    const result = await run(`INSERT INTO budget_releases (allocationId,costCenter,objectCode,dateReleased,amount,remarks,costCenterName,type,reference_number,is_approved,approvedBy,approvedAt,financialYear,notes,quarter,createdBy,updatedBy,createdAt,updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, params);
+console.log("-----------------------------------",result);
+if (result?.lastID) {
+      return {
+        id: result.lastID,
+        allocationId, 
+        objectCode, 
+        costCenter, 
+        costCenterName, 
+        financialYear, 
+        quarter, 
+        amount, 
+        dateReleased, 
+        remarks, 
+        type,
+        createdAt: now,
+        updatedAt: now,
+      };
+    }
+
+    throw new Error('Insert failed, no ID returned');
+  } catch (error) {
+    console.error('Error in createBudgetAllocation:', {
+      message: error.message,
+      stack: error.stack
+    }, error);
+    throw error;
+  }
+
+},
+getBudgetReleases: async ()=>{
+try {
+    const rows = await all('SELECT * FROM budget_releases');
+    return rows;
+  } catch (error) {
+    console.error('Error fetching budget releases:', error.message);
+    throw error;
+  }
+},
+getBudgetReleaseById: async (id)=>{
+try {
+    const row = await get('SELECT * FROM budget_releases WHERE id = ?', [id]);
+    if (!row) throw new Error(`No budget releases found with ID ${id}`);
+    return row;
+  } catch (error) {
+    console.error('Error in getBudgetReleaseById:', error.message);
+    throw error;
+  }
+},
+deleteBudgetRelease: async (id)=> {
+  try {
+    const result = await run('DELETE FROM budget_releases WHERE id = ?', [id]);
+    return { deleted: result.changes };
+  } catch (error) {
+    console.error('Error deleting budget releases:', error.message);
+    throw error;
+  }
+},
+
+createBudgetAdjustment: async (adjustment)=> {
+  try {
+    const {
+      fromObjectCode,
+      fromObjectCodeId,
+      fromCostCenterId,
+      fromCostCenter,
+      fromCostCenterName,
+      toObjectCode,
+      toObjectCodeId,
+      toCostCenterId,
+      toCostCenter,
+      toCostCenterName,
+      amountAllocated,
+      budgetReleased,
+      financialYear,
+      period,
+      remarks,
+      dateCreated
+      } = adjustment;
+
+    if (!financialYear || !fromObjectCodeId || !fromCostCenterId || !dateCreated || !period) {
+      throw new Error('Missing required fields for budget adjustment.');
+    }
+
+    const now = new Date().toISOString();
+
+    const params = [
+    fromObjectCode,
+    fromObjectCodeId,
+    fromCostCenterId,
+    fromCostCenter,
+    fromCostCenterName,
+    toObjectCode,
+    toObjectCodeId,
+    toCostCenterId,
+    toCostCenter,
+    toCostCenterName,
+    amountAllocated,
+    budgetReleased,
+    period,
+    remarks,
+    financialYear,
+    now,
+    null,
+    null,
+    now,
+    now
+    ];
+
+    const result = await run(`
+      INSERT INTO budget_adjustments
+      (fromObjectCode,fromObjectCodeId,fromCostCenterId,fromCostCenter,fromCostCenterName,toObjectCode,toObjectCodeId,toCostCenterId,toCostCenter,toCostCenterName,amountAllocated,budgetReleased,period,remarks,financialYear,dateCreated, createdBy, updatedBy, createdAt, updatedAt)
+      VALUES (?, ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      params
+    );
+    console.log("-----------------------------------",result);
+
+    if (result?.lastID) {
+      return {
+        id: result.lastID,
+        fromObjectCode,
+    fromObjectCodeId,
+    fromCostCenterId,
+    fromCostCenter,
+    fromCostCenterName,
+    toObjectCode,
+    toObjectCodeId,
+    toCostCenterId,
+    toCostCenter,
+    toCostCenterName,
+    amountAllocated,
+    budgetReleased,
+    period,
+    remarks,
+    financialYear,
+    dateCreated:now,
+        createdAt: now,
+        updatedAt: now,
+      };
+    }
+
+    throw new Error('Insert failed, no ID returned');
+  } catch (error) {
+    console.error('Error in createBudgetAllocation:', {
+      message: error.message,
+      stack: error.stack
+    }, error);
+    throw error;
+  }
+},
+getBudgetAdjustment: async ()=>{
+try {
+    const rows = await all('SELECT * FROM budget_adjustments');
+    return rows;
+  } catch (error) {
+    console.error('Error fetching budget adjustments:', error.message);
+    throw error;
+  }
+},
+getBudgetAdjustmentById: async (id)=>{
+try {
+    const row = await get('SELECT * FROM budget_adjustments WHERE id = ?', [id]);
+    if (!row) throw new Error(`No budget releases found with ID ${id}`);
+    return row;
+  } catch (error) {
+    console.error('Error in getBudgetReleaseById:', error.message);
+    throw error;
+  }
+},
+deleteBudgetAdjustment: async (id)=> {
+  try {
+    const result = await run('DELETE FROM budget_adjustments WHERE id = ?', [id]);
+    return { deleted: result.changes };
+  } catch (error) {
+    console.error('Error deleting budget releases:', error.message);
+    throw error;
+  }
+},
   // Close the database connection
   close: () => {
     return new Promise((resolve, reject) => {

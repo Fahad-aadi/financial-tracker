@@ -47,6 +47,11 @@ router.post('/', async (req, res) => {
     
     // Get the created allocation with its ID
     const createdAllocation = await db.getBudgetAllocationById(result.id);
+    let objectCodeDetail = await db.getObjectCodeById(createdAllocation.objectCode)
+    let costCenterDetail = await db.getCostCenterById(createdAllocation.costCenter)
+
+    createdAllocation['objectCodeName']= objectCodeDetail.code;
+    createdAllocation['costCenterName']= costCenterDetail.code;
     
     console.log('Budget allocation saved successfully:', createdAllocation);
     res.status(201).json(createdAllocation);
@@ -70,35 +75,60 @@ router.get('/', async (req, res) => {
     } else if (financialYear) {
       allocations = await db.getBudgetAllocationsByFinancialYear(financialYear);
     } else {
-      allocations = await db.getBudgetAllocations();
+      allocations = await db.getAllBudgetAllocations();
     }
     
     console.log(`Found ${allocations.length} budget allocations`);
     
     // Transform boolean fields from SQLite integers to JavaScript booleans
-    const transformedAllocations = allocations.map(allocation => ({
-      ...allocation,
-      q1Released: allocation.q1Released === 1,
-      q2Released: allocation.q2Released === 1,
-      q3Released: allocation.q3Released === 1,
-      q4Released: allocation.q4Released === 1
-    }));
+    // const transformedAllocations = await allocations.map(async (allocation) => {
+    //   let objectCodeDetail =  await db.getObjectCodeById(allocation.objectCode)
+    //   let costCenterDetail =  await db.getCostCenterById(allocation.costCenter)
+    //   return {
+    //   ...allocation,
+    //   q1Released: allocation.q1Released === 1,
+    //   q2Released: allocation.q2Released === 1,
+    //   q3Released: allocation.q3Released === 1,
+    //   q4Released: allocation.q4Released === 1,
+    //   objectCodeName: objectCodeDetail.name,
+    //   costCenterName: costCenterDetail.name,
+    // }});
     
-    res.json(transformedAllocations);
+    const transformedAllocations = await Promise.all(
+    allocations.map(async (allocation) => {
+      let objectCodeDetail = await db.getObjectCodeById(allocation.objectCode);
+      let costCenterDetail = await db.getCostCenterById(allocation.costCenter);
+      
+      return {
+        ...allocation,
+        q1Released: allocation.q1Released === 1,
+        q2Released: allocation.q2Released === 1,
+        q3Released: allocation.q3Released === 1,
+        q4Released: allocation.q4Released === 1,
+        objectCodeName: objectCodeDetail?.code || null,
+        costCenterName: costCenterDetail?.code || null
+      };
+    })
+  );
+  await res.json(transformedAllocations);
   } catch (error) {
     console.error('Error in GET /api/budget-allocations:', error);
     res.status(500).json({ error: 'Failed to retrieve budget allocations', details: error.message });
   }
 });
 
-router.get('/id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const allocation = await db.getBudgetAllocationById(id);
-    
     if (!allocation) {
       return res.status(404).json({ error: 'Budget allocation not found' });
     }
+    let objectCodeDetail = await db.getObjectCodeById(allocation.objectCode)
+    let costCenterDetail = await db.getCostCenterById(allocation.costCenter)
+
+    allocation['objectCodeName']= objectCodeDetail.code;
+    allocation['costCenterName']= costCenterDetail.code;
     
     // Transform boolean fields from SQLite integers to JavaScript booleans
     const transformedAllocation = {

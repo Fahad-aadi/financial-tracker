@@ -65,10 +65,11 @@ router.post('/', async (req, res) => {
     
     // In the POST endpoint, revert to the previous logic:
     const result = await db.createObjectCode({ code, description });
-    if (!result || !result.lastID) {
+    console.log("Result", result, !result, !result.lastID);
+    if (!result || !result.id) {
       throw new Error('Failed to create object code');
     }
-    const objectCode = await db.getObjectCodeById(result.lastID);
+    const objectCode = await db.getObjectCodeById(result.id);
     if (!objectCode) {
       throw new Error('Failed to fetch created object code');
     }

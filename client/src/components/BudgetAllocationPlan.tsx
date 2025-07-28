@@ -86,6 +86,7 @@ const BudgetAllocationPlan: React.FC = () => {
         setCostCenters(Array.isArray(costCentersData) ? costCentersData : []);
         setAllocations(Array.isArray(allocationsData) ? allocationsData : []);
       } catch (err) {
+        
         setObjectCodes([]);
         setCostCenters([]);
         setAllocations([]);
