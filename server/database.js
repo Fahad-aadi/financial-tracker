@@ -224,6 +224,8 @@ const initDatabase = () => {
         updatedBy INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,
+        fromAllocation INTEGER,
+        toAllocation INTEGER,
         FOREIGN KEY (fromCostCenterId) REFERENCES cost_centers (id) ON DELETE CASCADE,
         FOREIGN KEY (fromObjectCodeId) REFERENCES object_codes (id) ON DELETE CASCADE,
         FOREIGN KEY (toCostCenterId) REFERENCES cost_centers (id) ON DELETE CASCADE,
@@ -1095,7 +1097,9 @@ createBudgetAdjustment: async (adjustment)=> {
       financialYear,
       period,
       remarks,
-      dateCreated
+      dateCreated,
+      fromAllocation,
+      toAllocation
       } = adjustment;
 
     if (!financialYear || !fromObjectCodeId || !fromCostCenterId || !dateCreated || !period) {
@@ -1124,13 +1128,15 @@ createBudgetAdjustment: async (adjustment)=> {
     null,
     null,
     now,
-    now
+    now,
+    fromAllocation,
+    toAllocation
     ];
 
     const result = await run(`
       INSERT INTO budget_adjustments
-      (fromObjectCode,fromObjectCodeId,fromCostCenterId,fromCostCenter,fromCostCenterName,toObjectCode,toObjectCodeId,toCostCenterId,toCostCenter,toCostCenterName,amountAllocated,budgetReleased,period,remarks,financialYear,dateCreated, createdBy, updatedBy, createdAt, updatedAt)
-      VALUES (?, ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (fromObjectCode,fromObjectCodeId,fromCostCenterId,fromCostCenter,fromCostCenterName,toObjectCode,toObjectCodeId,toCostCenterId,toCostCenter,toCostCenterName,amountAllocated,budgetReleased,period,remarks,financialYear,dateCreated, createdBy, updatedBy, createdAt, updatedAt,fromAllocation, toAllocation)
+      VALUES (?, ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       params
     );
     console.log("-----------------------------------",result);
@@ -1156,6 +1162,8 @@ createBudgetAdjustment: async (adjustment)=> {
     dateCreated:now,
         createdAt: now,
         updatedAt: now,
+    fromAllocation,
+    toAllocation
       };
     }
 

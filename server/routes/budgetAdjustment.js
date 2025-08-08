@@ -64,12 +64,38 @@ router.post('/', async (req, res) => {
     financialYear,
     period,
     remarks,
-    dateCreated
+    dateCreated,
+    fromAllocation,
+    toAllocation
 } = req.body;
     
     // Convert camelCase to snake_case for database
     const newAdjustment = await db.createBudgetAdjustment(req.body)
+    if (period == "surrender") {
+      allocation = await db.getBudgetAllocationById(fromAllocation);
+      allocation["surrenders"] = allocation.surrenders - budgetReleased;
+      allocation["totalAllocation"] = allocation.totalAllocation + budgetReleased;
+      allocation = await db.updateBudgetAllocation(fromAllocation, allocation)
+    }
     
+    if(period== "supplementary"){
+      allocation = await db.getBudgetAllocationById(fromAllocation);
+      allocation["supplementary"] = allocation.supplementary - budgetReleased;
+      allocation["totalAllocation"] = allocation.totalAllocation + budgetReleased;
+      allocation = await db.updateBudgetAllocation(fromAllocation, allocation)
+    }
+    if (period == "reappropriation") {
+      fromAllocationBudget = await db.getBudgetAllocationById(fromAllocation);
+      toAllocationBudget = await db.getBudgetAllocationById(toAllocation);
+
+      fromAllocationBudget["surrenders"] = fromAllocationBudget.reappropriation - budgetReleased;
+      fromAllocationBudget["totalAllocation"] = fromAllocationBudget.totalAllocation + budgetReleased;
+      toAllocationBudget["surrenders"] = toAllocationBudget.reappropriation - budgetReleased;
+      toAllocationBudget["totalAllocation"] = toAllocationBudget.totalAllocation - budgetReleased;
+
+      allocation = await db.updateBudgetAllocation(fromAllocation, fromAllocationBudget)
+      toAllocationBudget = await db.updateBudgetAllocation(toAllocation, toAllocationBudget)
+    }
     // const newAdjustment = await db('budget_adjustments').where({ id }).first();
     
     // Convert back to camelCase for response
@@ -160,7 +186,33 @@ router.delete('/:id', async (req, res) => {
     if (!existingAdjustment) {
         return res.status(404).json({ error: 'Budget adjustment not found' });
     }
-        
+    if (existingAdjustment.period == "surrender") {
+      allocation = await db.getBudgetAllocationById(existingAdjustment.fromAllocation);
+      allocation["surrenders"] = allocation.surrenders + existingAdjustment.budgetReleased;
+      allocation["totalAllocation"] = allocation.totalAllocation - existingAdjustment.budgetReleased;
+      allocation = await db.updateBudgetAllocation(existingAdjustment.fromAllocation, allocation)
+    }
+    if(existingAdjustment.period =="supplementary"){
+      allocation = await db.getBudgetAllocationById(existingAdjustment.fromAllocation);
+      allocation["supplementary"] = allocation.supplementary + existingAdjustment.budgetReleased;
+      allocation["totalAllocation"] = allocation.totalAllocation - existingAdjustment.budgetReleased;
+      allocation = await db.updateBudgetAllocation(existingAdjustment.fromAllocation, allocation)
+    }
+    
+    if (existingAdjustment.period == "reappropriation") {
+      fromAllocationBudget = await db.getBudgetAllocationById(existingAdjustment.fromAllocation);
+      toAllocationBudget = await db.getBudgetAllocationById(existingAdjustment.toAllocation);
+
+      fromAllocationBudget["reappropriation"] = fromAllocationBudget.reappropriation + existingAdjustment.budgetReleased;
+      fromAllocationBudget["totalAllocation"] = fromAllocationBudget.totalAllocation - existingAdjustment.budgetReleased;
+      toAllocationBudget["reappropriation"] = toAllocationBudget.reappropriation + existingAdjustment.budgetReleased;
+      toAllocationBudget["totalAllocation"] = toAllocationBudget.totalAllocation + existingAdjustment.budgetReleased;
+
+      allocation = await db.updateBudgetAllocation(existingAdjustment.fromAllocation, fromAllocationBudget)
+      toAllocationBudget = await db.updateBudgetAllocation(existingAdjustment.toAllocation, toAllocationBudget)
+    }
+
+    
     await db.deleteBudgetAdjustment(id);
     res.status(204).end();
   } catch (error) {

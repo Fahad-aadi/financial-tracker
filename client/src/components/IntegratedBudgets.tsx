@@ -62,6 +62,7 @@ interface BudgetAdjustment {
   toObjectCode?: string;
   toCostCenter?: string;
   amount: number;
+  budgetReleased ?: number;
   type: 'supplementary' | 'reappropriation' | 'surrender';
   period ?:string;
   remarks: string;
@@ -276,6 +277,15 @@ const IntegratedBudgets: React.FC = () => {
       syncBudgetEntries();
     }
   }, [allocations.length]);
+
+
+    // Add useEffect to sync budget entries after allocations change
+  useEffect(() => {
+    if (allocations.length > 0) {
+      // Only sync if we have allocations loaded
+      syncBudgetEntries();
+    }
+  }, [adjustments.length]);
 
   // Add useEffect to sync budget entries after any deletion operation
   useEffect(() => {
@@ -762,6 +772,24 @@ const IntegratedBudgets: React.FC = () => {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to delete budget adjustment');
       }
+
+      const adjustmentsResponse = await fetch('http://localhost:4001/api/budget-adjustments');
+      if (adjustmentsResponse.ok) {
+        const adjustmentsData = await adjustmentsResponse.json();
+        setAdjustments(adjustmentsData);
+      } else {
+        console.error('Failed to fetch budget adjustments from API - endpoint may not exist yet');
+        setAdjustments([]);
+      }
+
+      const adjustmentsAllocation = await fetch('http://localhost:4001/api/budget-allocations');
+      if (adjustmentsAllocation.ok) {
+        const adjustmentsData = await adjustmentsAllocation.json();
+        setAllocations(adjustmentsData);
+      } else {
+        console.error('Failed to fetch budget adjustments from API - endpoint may not exist yet');
+        setAllocations([]);
+      }
       
       // Set flag to trigger budget entries sync after deletion
       localStorage.setItem('needsBudgetSync', 'true');
@@ -1165,7 +1193,8 @@ const IntegratedBudgets: React.FC = () => {
         financialYear,
         period: 'supplementary',
         remarks: `Supplementary grant: ${remarks}`,
-        dateCreated: currentDate
+        dateCreated: currentDate,
+        fromAllocation: allocation.id
       };
       
       budgetEntries.push(newEntry);
@@ -1175,6 +1204,7 @@ const IntegratedBudgets: React.FC = () => {
             headers: {
               'Content-Type': 'application/json',
             },
+            
             body: JSON.stringify(newEntry)
           });
           
@@ -1241,7 +1271,7 @@ const IntegratedBudgets: React.FC = () => {
       };
       
       // Update the releases list
-      setReleases([...releases, fromRelease, toRelease]);
+      // setReleases([...releases, fromRelease, toRelease]);
       
       // Also update the budgetEntries in localStorage
       const storedBudgets = localStorage.getItem('budgetEntries');
@@ -1272,7 +1302,9 @@ const IntegratedBudgets: React.FC = () => {
         financialYear,
         period: 'reappropriation',
         remarks: `Reappropriation to ${toObjectCode}: ${remarks}`,
-        dateCreated: currentDate
+        dateCreated: currentDate,
+        fromAllocation: fromAllocation.id,
+        toAllocation: toAllocation.id
       };
       
       const toEntry = {
@@ -1363,7 +1395,8 @@ const IntegratedBudgets: React.FC = () => {
         financialYear,
         period: 'surrender',
         remarks: `Budget surrender: ${remarks}`,
-        dateCreated: currentDate
+        dateCreated: currentDate,
+        fromAllocation: allocation.id
       };
       //=============
       budgetEntries.push(newEntry);
@@ -1397,7 +1430,23 @@ const IntegratedBudgets: React.FC = () => {
       remarks: '',
       financialYear: ''
     });
-    
+    const adjustmentsResponse = await fetch('http://localhost:4001/api/budget-adjustments');
+      if (adjustmentsResponse.ok) {
+        const adjustmentsData = await adjustmentsResponse.json();
+        setAdjustments(adjustmentsData);
+      } else {
+        console.error('Failed to fetch budget adjustments from API - endpoint may not exist yet');
+        setAdjustments([]);
+      }
+    const adjustmentsAllocation = await fetch('http://localhost:4001/api/budget-allocations');
+      if (adjustmentsAllocation.ok) {
+        const adjustmentsData = await adjustmentsAllocation.json();
+        setAllocations(adjustmentsData);
+      } else {
+        console.error('Failed to fetch budget adjustments from API - endpoint may not exist yet');
+        setAllocations([]);
+      }
+    // syncBudgetEntries()
     setShowAdjustmentForm(false);
   };
 
@@ -2185,7 +2234,7 @@ const IntegratedBudgets: React.FC = () => {
                       <td>{adjustment.fromCostCenter}</td>
                       <td>{adjustment.toObjectCode}</td>
                       <td>{adjustment.toCostCenter}</td>
-                      <td className="amount">Rs. {adjustment.amount.toLocaleString()}</td>
+                      <td className="amount">Rs. {adjustment?.budgetReleased?.toLocaleString()}</td>
                       <td>{adjustment.remarks}</td>
                       <td>
                         <button 
